@@ -5,20 +5,21 @@ entity mux1 is
 	port(
 		in0		:	in	std_logic;
 		in1		:	in 	std_logic;
-		Sel		:	in	std_logic;
-		O		:	out std_logic
+		sel		:	in	std_logic;
+		output		:	out std_logic
 	);
 end mux1;
 
 architecture bhv of mux1 is
 begin
-	process(in0,in1,Sel)
+	process(in0,in1,sel)
 	begin
 		case sel is
-			when '0' => 
-				O <= in0;
+			when '1' => 
+				output <= in1;
 			when others =>
-				O <= in1;
+				output <= in0;
 		end case;
 	end process;
 end bhv;
+
