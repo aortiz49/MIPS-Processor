@@ -21,8 +21,18 @@ string andi_array[100];
 string add_array[100];
 string slt_array[100];
 string sub_array[100];
+string lui_array[100];
+string nor_array[100];
+string srl_array[100];
+string sll_array[100];
+string subu_array[100];
+string sltu_array[100];
+string addu_array[100];
+string or_array[100];
+string and_array[100];
 
 
+int instr_index[32];
 
 string toBin_5(string y);
 void I_type_parse(int i,string s[],string op);
@@ -40,6 +50,15 @@ int main () {
   string add = "add ";
   string slt = "slt ";
   string sub = "sub ";
+  string lui = "lui ";
+  string nor = "nor ";
+  string srl = "srl ";
+  string sll = "sll ";
+  string subu = "subu ";
+  string sltu = "sltu ";
+  string addu = "addu ";
+  string or_ = "or ";
+  string and_ = "and ";
 
 
   string ori_op = "001101";
@@ -48,10 +67,20 @@ int main () {
   string slti_op = "001010";
   string addiu_op = "001001";
   string andi_op = "001100";
+  string lui_op = "001111";
+
 
   string add_funct = "20";
   string slt_funct = "2A";
   string sub_funct = "22";
+  string nor_funct = "27";
+  string srl_funct = "02";
+  string sll_funct = "00";
+  string subu_funct = "23";
+  string sltu_funct = "2B";
+  string addu_funct = "21";
+  string or_funct = "25";
+  string and_funct = "24";
 
   int ori_addr[100];
   int sltiu_addr[100];
@@ -62,17 +91,21 @@ int main () {
   int add_addr[100];
   int slt_addr[100];
   int sub_addr[100];
+  int lui_addr[100];
+  int nor_addr[100];
+  int srl_addr[100];
+  int sll_addr[100];
+  int subu_addr[100];
+  int sltu_addr[100];
+  int addu_addr[100];
+  int or_addr[100];
+  int and_addr[100];
 
-  
-  int a1 = 0;
-  int a2 = 0;
-  int a3 = 0;
-  int a4 = 0;
-  int a5 = 0;
-  int a6 = 0;
-  int a7 = 0;
-  int a8 = 0;
-  int a9 = 0;
+
+
+  for(int i = 0; i<30; i++){
+    instr_index[i] = 0;
+  }
   
   size_t ori_size;
   size_t sltiu_size;
@@ -83,6 +116,15 @@ int main () {
   size_t add_size;
   size_t slt_size;
   size_t sub_size;
+  size_t lui_size;
+  size_t nor_size;
+  size_t srl_size;
+  size_t sll_size;
+  size_t subu_size;
+  size_t sltu_size;
+  size_t addu_size;
+  size_t or_size;
+  size_t and_size;
  
 
 // Grab all instructions and labels
@@ -91,7 +133,9 @@ int main () {
 
 
 for(int addr = 1;!myfile.eof();addr++){
+
         getline (myfile,line);
+       
         ori_size = line.find(ori);
         sltiu_size = line.find(sltiu);
         addi_size = line.find(addi);
@@ -101,80 +145,155 @@ for(int addr = 1;!myfile.eof();addr++){
         add_size = line.find(add);
         slt_size = line.find(slt);
         sub_size = line.find(sub);
+        lui_size = line.find(lui);
+        nor_size = line.find(nor);
+        srl_size = line.find(srl);
+        sll_size = line.find(sll);
+        subu_size = line.find(subu);
+        sltu_size = line.find(sltu);
+        addu_size = line.find(addu);
+        or_size = line.find(or_);
+        and_size = line.find(and_);
 
 //cout<<base+addr<<endl;
         
-          if(ori_size!=std::string::npos){
-            ori_array[a1] = line;
-            I_type_parse(a1,ori_array,ori_op);
-            ori_addr[a1] = base+addr;   
-            cout << " <= ori at address " <<ori_addr[a1]<<"\n";       
-            a1++;
-          }
+           
 
-          if(sltiu_size!=std::string::npos){
-            sltiu_array[a2] = line;
-            I_type_parse(a2,sltiu_array,sltiu_op);
-            sltiu_addr[a2] = base+addr;   
-            cout << " <= sltiu at address " <<sltiu_addr[a2]<<"\n";       
-            a2++;
-          }
+          
 
           if(addi_size!=std::string::npos){
-            addi_array[a3] = line;
-            I_type_parse(a3,addi_array,addi_op);
-            addi_addr[a3] = base+addr;   
-            cout << " <= addi at address " <<addi_addr[a3]<<"\n";       
-            a3++;
+            addi_array[instr_index[3]] = line;
+            I_type_parse(instr_index[3],addi_array,addi_op);
+            addi_addr[instr_index[3]] = base+addr;   
+            cout << " <= addi at address " <<addi_addr[instr_index[3]]<<"\n";       
+            instr_index[3]++;
           }
 
           if(slti_size!=std::string::npos){
-            slti_array[a4] = line;
-            I_type_parse(a4,slti_array,slti_op);
-            slti_addr[a4] = base+addr;   
-            cout << " <= slti at address " <<slti_addr[a4]<<"\n";       
-            a4++;
+            slti_array[instr_index[4]] = line;
+            I_type_parse(instr_index[4],slti_array,slti_op);
+            slti_addr[instr_index[4]] = base+addr;   
+            cout << " <= slti at address " <<slti_addr[instr_index[4]]<<"\n";       
+            instr_index[4]++;
           }
 
           if(addiu_size!=std::string::npos){
-            addiu_array[a5] = line;
-            I_type_parse(a5,addiu_array,addiu_op);
-            addiu_addr[a5] = base+addr;   
-            cout << " <= addiu at address " <<addiu_addr[a5]<<"\n";       
-            a5++;
+            addiu_array[instr_index[5]] = line;
+            I_type_parse(instr_index[5],addiu_array,addiu_op);
+            addiu_addr[instr_index[5]] = base+addr;   
+            cout << " <= addiu at address " <<addiu_addr[instr_index[5]]<<"\n";       
+            instr_index[5]++;
           }
 
           if(andi_size!=std::string::npos){
-            andi_array[a6] = line;
-            I_type_parse(a6,andi_array,andi_op);
-            andi_addr[a6] = base+addr;   
-            cout << " <= andi at address " <<andi_addr[a6]<<"\n";       
-            a6++;
+            andi_array[instr_index[6]] = line;
+            I_type_parse(instr_index[6],andi_array,andi_op);
+            andi_addr[instr_index[6]] = base+addr;   
+            cout << " <= andi at address " <<andi_addr[instr_index[6]]<<"\n";       
+            instr_index[6]++;
           }
 
           if(add_size!=std::string::npos){
-            add_array[a7] = line;
-            R_type_parse(a7,add_array,add_funct);
-            add_addr[a7] = base+addr;   
-            cout << " <= add at address " <<add_addr[a6]<<"\n";       
-            a7++;
+            add_array[instr_index[7]] = line;
+            R_type_parse(instr_index[7],add_array,add_funct);
+            add_addr[instr_index[7]] = base+addr;   
+            cout << " <= add at address " <<add_addr[instr_index[6]]<<"\n";       
+            instr_index[7]++;
           }
 
           if(slt_size!=std::string::npos){
-            slt_array[a8] = line;
-            R_type_parse(a8,slt_array,slt_funct);
-            slt_addr[a8] = base+addr;   
-            cout << " <= slt at address " <<slt_addr[a8]<<"\n";       
-            a8++;
+            slt_array[instr_index[8]] = line;
+            R_type_parse(instr_index[8],slt_array,slt_funct);
+            slt_addr[instr_index[8]] = base+addr;   
+            cout << " <= slt at address " <<slt_addr[instr_index[8]]<<"\n";       
+            instr_index[8]++;
           }
 
           if(sub_size!=std::string::npos){
-            sub_array[a9] = line;
-            R_type_parse(a9,sub_array,sub_funct);
-            sub_addr[a9] = base+addr;   
-            cout << " <= sub at address " <<sub_addr[a9]<<"\n";       
-            a9++;
+            sub_array[instr_index[9]] = line;
+            R_type_parse(instr_index[9],sub_array,sub_funct);
+            sub_addr[instr_index[9]] = base+addr;   
+            cout << " <= sub at address " <<sub_addr[instr_index[9]]<<"\n";       
+            instr_index[9]++;
           }
+
+          if(lui_size!=std::string::npos){
+            lui_array[instr_index[10]] = line;
+            I_type_parse(instr_index[10],lui_array,lui_op);
+            lui_addr[instr_index[10]] = base+addr;   
+            cout << " <= lui at address " <<lui_addr[instr_index[10]]<<"\n";       
+            instr_index[10]++;
+          }
+
+          if(nor_size!=std::string::npos){
+            nor_array[instr_index[11]] = line;
+            R_type_parse(instr_index[11],nor_array,nor_funct);
+            nor_addr[instr_index[11]] = base+addr;   
+            cout << " <= nor at address " <<nor_addr[instr_index[11]]<<"\n";       
+            instr_index[11]++;
+          }
+
+          if(srl_size!=std::string::npos){
+            srl_array[instr_index[12]] = line;
+            R_type_parse(instr_index[12],srl_array,srl_funct);
+            srl_addr[instr_index[12]] = base+addr;   
+            cout << " <= srl at address " <<srl_addr[instr_index[12]]<<"\n";       
+            instr_index[12]++;
+          }
+
+          if(sll_size!=std::string::npos){
+            sll_array[instr_index[13]] = line;
+            R_type_parse(instr_index[13],sll_array,sll_funct);
+            sll_addr[instr_index[13]] = base+addr;   
+            cout << " <= sll at address " <<sll_addr[instr_index[13]]<<"\n";       
+            instr_index[13]++;
+          }
+
+          if(subu_size!= std::string::npos){
+            subu_array[instr_index[14]] = line;
+            R_type_parse(instr_index[14],subu_array,subu_funct);
+            subu_addr[instr_index[14]] = base+addr;   
+            cout << " <= subu at address " <<subu_addr[instr_index[14]]<<"\n";       
+            instr_index[14]++;
+          }
+
+          if(sltu_size!=std::string::npos){
+            sltu_array[instr_index[15]] = line;
+            R_type_parse(instr_index[15],sltu_array,sltu_funct);
+            sltu_addr[instr_index[15]] = base+addr;   
+            cout << " <= sltu at address " <<sltu_addr[instr_index[15]]<<"\n";       
+            instr_index[15]++;
+          }
+
+          if(addu_size!=std::string::npos){
+            addu_array[instr_index[16]] = line;
+            R_type_parse(instr_index[16],addu_array,addu_funct);
+            addu_addr[instr_index[16]] = base+addr;   
+            cout << " <= addu at address " <<addu_addr[instr_index[16]]<<"\n";       
+            instr_index[16]++;
+          }
+
+          if(or_size!=std::string::npos){
+            if(line.at(0)=='n') // Removes incorrect recognition of 'or' within 'nor'
+              continue; 
+            or_array[instr_index[17]] = line;
+            R_type_parse(instr_index[17],or_array,or_funct);
+            or_addr[instr_index[17]] = base+addr;   
+            cout << " <= or at address " <<or_addr[instr_index[17]]<<"\n";       
+            instr_index[17]++;
+          }
+
+          if(and_size!=std::string::npos){
+            and_array[instr_index[18]] = line;
+            R_type_parse(instr_index[18],and_array,and_funct);
+            and_addr[instr_index[18]] = base+addr;   
+            cout << " <= and at address " <<and_addr[instr_index[18]]<<"\n";       
+            instr_index[18]++;
+          }
+
+          
+
+
 
            
           
@@ -207,7 +326,7 @@ int bin3[4];
 
 //first value
   int spos = s[i].find("$")+1;
-  int epos = s[i].find(",");
+   int epos = s[i].find(",");
   int length = (epos - spos);
   val1 = s[i].substr(spos, length);
 
@@ -224,6 +343,9 @@ int bin3[4];
    epos = s[i].size();
    length = epos-spos;
    val3 = s[i].substr(spos,length);
+   if(op == "001111")
+    val12 = op+"00000"+toBin_5(val1);
+  
    
 
 
@@ -243,7 +365,6 @@ int bin3[4];
   for(int i = 0;i<4;i++)
     bin3[i] = valx.at(i) - '0'; 
   
-
 
     string hex_dig[32]={"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
     string hex0,hex1,hex2,hex3;
@@ -294,7 +415,11 @@ int bin5[4];
    val3 = s[i].substr(spos, length);
 
    val12 = special+toBin_5(val2)+toBin_5(val3)+toBin_5(val1)+"00000";
-
+   if((funct=="02") || (funct == "00")){
+    spos = epos+1;
+    val3 = s[i].substr(spos, s[i].size());
+    val12 = special+"00000"+toBin_5(val2)+toBin_5(val1)+toBin_5(val3)+funct;
+  }
 
 
  valx = val12.substr(0, 4);
