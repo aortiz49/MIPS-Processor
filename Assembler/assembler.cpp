@@ -11,7 +11,11 @@
 using namespace std;
 
 // GLOBAL ARRAY
+//Arrays that hold the string containing that instructions
+// i.e ori_array[0] = ori $1, $1, 0xfffe
+// I sort all the lines by instruction and parse them
 
+string label_array[100];
 string ori_array[100];
 string sltiu_array[100];
 string addi_array[100];
@@ -32,15 +36,17 @@ string or_array[100];
 string and_array[100];
 
 
-int instr_index[32];
+
+int instr_index[32];    // Temp
+int label_index = 0;    
 
 string toBin_5(string y);
-void I_type_parse(int i,string s[],string op);
-void R_type_parse(int i,string s[],string funct);
+string I_type_parse(int i,string s[],string op);
+string R_type_parse(int i,string s[],string funct);
 int main () {
 #define base 400000
-  string line;
- 
+  string line;  //
+  string label = ":";
   string ori = "ori ";
   string sltiu = "sltiu ";
   string addi = "addi ";
@@ -61,6 +67,7 @@ int main () {
   string and_ = "and ";
 
 
+
   string ori_op = "001101";
   string sltiu_op = "001011";
   string addi_op ="001000";
@@ -68,6 +75,7 @@ int main () {
   string addiu_op = "001001";
   string andi_op = "001100";
   string lui_op = "001111";
+
 
 
   string add_funct = "20";
@@ -81,7 +89,8 @@ int main () {
   string addu_funct = "21";
   string or_funct = "25";
   string and_funct = "24";
-
+// Address location where instrcution was found
+  int label_addr[100];
   int ori_addr[100];
   int sltiu_addr[100];
   int addi_addr[100];
@@ -100,6 +109,7 @@ int main () {
   int addu_addr[100];
   int or_addr[100];
   int and_addr[100];
+
 
 
 
@@ -125,6 +135,8 @@ int main () {
   size_t addu_size;
   size_t or_size;
   size_t and_size;
+  size_t label_size;
+
  
 
 // Grab all instructions and labels
@@ -154,16 +166,21 @@ for(int addr = 1;!myfile.eof();addr++){
         addu_size = line.find(addu);
         or_size = line.find(or_);
         and_size = line.find(and_);
-
-//cout<<base+addr<<endl;
-        
-           
+        label_size = line.find(label);
+       
+          if(label_size!=std::string::npos){
+            label_array[label_index] = line;
+            cout<<label_array[label_index];
+            label_addr[label_index] = base+addr;
+            cout<<" <= label at " <<label_addr[label_index]<<endl;
+            label_index++;
+          }
 
           
 
           if(addi_size!=std::string::npos){
             addi_array[instr_index[3]] = line;
-            I_type_parse(instr_index[3],addi_array,addi_op);
+            cout<<I_type_parse(instr_index[3],addi_array,addi_op);
             addi_addr[instr_index[3]] = base+addr;   
             cout << " <= addi at address " <<addi_addr[instr_index[3]]<<"\n";       
             instr_index[3]++;
@@ -171,7 +188,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(slti_size!=std::string::npos){
             slti_array[instr_index[4]] = line;
-            I_type_parse(instr_index[4],slti_array,slti_op);
+            cout<<I_type_parse(instr_index[4],slti_array,slti_op);
             slti_addr[instr_index[4]] = base+addr;   
             cout << " <= slti at address " <<slti_addr[instr_index[4]]<<"\n";       
             instr_index[4]++;
@@ -179,7 +196,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(addiu_size!=std::string::npos){
             addiu_array[instr_index[5]] = line;
-            I_type_parse(instr_index[5],addiu_array,addiu_op);
+            cout<<I_type_parse(instr_index[5],addiu_array,addiu_op);
             addiu_addr[instr_index[5]] = base+addr;   
             cout << " <= addiu at address " <<addiu_addr[instr_index[5]]<<"\n";       
             instr_index[5]++;
@@ -187,7 +204,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(andi_size!=std::string::npos){
             andi_array[instr_index[6]] = line;
-            I_type_parse(instr_index[6],andi_array,andi_op);
+            cout<<I_type_parse(instr_index[6],andi_array,andi_op);
             andi_addr[instr_index[6]] = base+addr;   
             cout << " <= andi at address " <<andi_addr[instr_index[6]]<<"\n";       
             instr_index[6]++;
@@ -195,7 +212,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(add_size!=std::string::npos){
             add_array[instr_index[7]] = line;
-            R_type_parse(instr_index[7],add_array,add_funct);
+            cout<<R_type_parse(instr_index[7],add_array,add_funct);
             add_addr[instr_index[7]] = base+addr;   
             cout << " <= add at address " <<add_addr[instr_index[6]]<<"\n";       
             instr_index[7]++;
@@ -203,7 +220,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(slt_size!=std::string::npos){
             slt_array[instr_index[8]] = line;
-            R_type_parse(instr_index[8],slt_array,slt_funct);
+            cout<<R_type_parse(instr_index[8],slt_array,slt_funct);
             slt_addr[instr_index[8]] = base+addr;   
             cout << " <= slt at address " <<slt_addr[instr_index[8]]<<"\n";       
             instr_index[8]++;
@@ -211,7 +228,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(sub_size!=std::string::npos){
             sub_array[instr_index[9]] = line;
-            R_type_parse(instr_index[9],sub_array,sub_funct);
+            cout<<R_type_parse(instr_index[9],sub_array,sub_funct);
             sub_addr[instr_index[9]] = base+addr;   
             cout << " <= sub at address " <<sub_addr[instr_index[9]]<<"\n";       
             instr_index[9]++;
@@ -219,7 +236,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(lui_size!=std::string::npos){
             lui_array[instr_index[10]] = line;
-            I_type_parse(instr_index[10],lui_array,lui_op);
+            cout<<I_type_parse(instr_index[10],lui_array,lui_op);
             lui_addr[instr_index[10]] = base+addr;   
             cout << " <= lui at address " <<lui_addr[instr_index[10]]<<"\n";       
             instr_index[10]++;
@@ -227,7 +244,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(nor_size!=std::string::npos){
             nor_array[instr_index[11]] = line;
-            R_type_parse(instr_index[11],nor_array,nor_funct);
+            cout<<R_type_parse(instr_index[11],nor_array,nor_funct);
             nor_addr[instr_index[11]] = base+addr;   
             cout << " <= nor at address " <<nor_addr[instr_index[11]]<<"\n";       
             instr_index[11]++;
@@ -235,7 +252,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(srl_size!=std::string::npos){
             srl_array[instr_index[12]] = line;
-            R_type_parse(instr_index[12],srl_array,srl_funct);
+            cout<<R_type_parse(instr_index[12],srl_array,srl_funct);
             srl_addr[instr_index[12]] = base+addr;   
             cout << " <= srl at address " <<srl_addr[instr_index[12]]<<"\n";       
             instr_index[12]++;
@@ -243,7 +260,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(sll_size!=std::string::npos){
             sll_array[instr_index[13]] = line;
-            R_type_parse(instr_index[13],sll_array,sll_funct);
+            cout<<R_type_parse(instr_index[13],sll_array,sll_funct);
             sll_addr[instr_index[13]] = base+addr;   
             cout << " <= sll at address " <<sll_addr[instr_index[13]]<<"\n";       
             instr_index[13]++;
@@ -251,7 +268,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(subu_size!= std::string::npos){
             subu_array[instr_index[14]] = line;
-            R_type_parse(instr_index[14],subu_array,subu_funct);
+            cout<<R_type_parse(instr_index[14],subu_array,subu_funct);
             subu_addr[instr_index[14]] = base+addr;   
             cout << " <= subu at address " <<subu_addr[instr_index[14]]<<"\n";       
             instr_index[14]++;
@@ -259,7 +276,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(sltu_size!=std::string::npos){
             sltu_array[instr_index[15]] = line;
-            R_type_parse(instr_index[15],sltu_array,sltu_funct);
+            cout<<R_type_parse(instr_index[15],sltu_array,sltu_funct);
             sltu_addr[instr_index[15]] = base+addr;   
             cout << " <= sltu at address " <<sltu_addr[instr_index[15]]<<"\n";       
             instr_index[15]++;
@@ -267,7 +284,7 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(addu_size!=std::string::npos){
             addu_array[instr_index[16]] = line;
-            R_type_parse(instr_index[16],addu_array,addu_funct);
+            cout<<R_type_parse(instr_index[16],addu_array,addu_funct);
             addu_addr[instr_index[16]] = base+addr;   
             cout << " <= addu at address " <<addu_addr[instr_index[16]]<<"\n";       
             instr_index[16]++;
@@ -277,7 +294,7 @@ for(int addr = 1;!myfile.eof();addr++){
             if(line.at(0)=='n') // Removes incorrect recognition of 'or' within 'nor'
               continue; 
             or_array[instr_index[17]] = line;
-            R_type_parse(instr_index[17],or_array,or_funct);
+            cout<<R_type_parse(instr_index[17],or_array,or_funct);
             or_addr[instr_index[17]] = base+addr;   
             cout << " <= or at address " <<or_addr[instr_index[17]]<<"\n";       
             instr_index[17]++;
@@ -285,21 +302,30 @@ for(int addr = 1;!myfile.eof();addr++){
 
           if(and_size!=std::string::npos){
             and_array[instr_index[18]] = line;
-            R_type_parse(instr_index[18],and_array,and_funct);
+            cout<<R_type_parse(instr_index[18],and_array,and_funct);
             and_addr[instr_index[18]] = base+addr;   
             cout << " <= and at address " <<and_addr[instr_index[18]]<<"\n";       
             instr_index[18]++;
           }
 
-          
+          if(ori_size!=std::string::npos){
+            ori_array[instr_index[19]] = line;
+            cout<<I_type_parse(instr_index[19],ori_array,ori_op);
+            ori_addr[instr_index[19]] = base+addr;   
+            cout << " <= ori at address " <<ori_addr[instr_index[19]]<<"\n";       
+            instr_index[19]++;
+          }
 
+          if(sltiu_size!=std::string::npos){
+            sltiu_array[instr_index[20]] = line;
+            cout<<I_type_parse(instr_index[20],sltiu_array,sltiu_op);
+            sltiu_addr[instr_index[20]] = base+addr;   
+            cout << " <= sltiu at address " <<sltiu_addr[instr_index[20]]<<"\n";       
+            instr_index[20]++;
+          }
 
-
-           
-          
-      
+    
    }
-
 
 
            
@@ -313,7 +339,7 @@ for(int addr = 1;!myfile.eof();addr++){
   return 0;
 }
 
-void I_type_parse(int i,string s[],string op){
+string I_type_parse(int i,string s[],string op){
 string val1;
 string val2;
 string val12;
@@ -367,7 +393,7 @@ int bin3[4];
   
 
     string hex_dig[32]={"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
-    string hex0,hex1,hex2,hex3;
+    string hex0,hex1,hex2,hex3,hex_res;
     int idx0 = 8*bin0[0] + 4*bin0[1] + 2*bin0[2] + bin0[3];
     int idx1 = 8*bin1[0] + 4*bin1[1] + 2*bin1[2] + bin1[3];
     int idx2 = 8*bin2[0] + 4*bin2[1] + 2*bin2[2] + bin2[3];
@@ -376,13 +402,15 @@ int bin3[4];
     hex1 = hex_dig[idx1];
     hex2 = hex_dig[idx2];
     hex3 = hex_dig[idx3];
-    cout << hex0<<hex1<<hex2<<hex3<<val3;
+    hex_res =  hex0+hex1+hex2+hex3+val3;
+
+    return hex_res;
 }
 
 
 
 
-void R_type_parse(int i,string s[],string funct){
+string R_type_parse(int i,string s[],string funct){
   // no support for shamt yet. only works for add
 string special = "000000";
 string val1;
@@ -462,11 +490,8 @@ int bin5[4];
     hex3 = hex_dig[idx3];
     hex4 = hex_dig[idx4];
     hex5 = hex_dig[idx5];
-    cout << hex0+hex1+hex2+hex3+hex4<<hex5<<funct;
+    return hex0+hex1+hex2+hex3+hex4+hex5+funct;
 }
-
-
-
 
 
 
