@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.MIPS_lib.all;
 
-entity alu1 is
+entity alu1_last is
 	port(
 		ia		:	in	std_logic;
 		ib		:	in	std_logic;
@@ -11,11 +11,12 @@ entity alu1 is
 		cout	:	out	std_logic;
 		cin		:	in 	std_logic;
 		control	:	in	std_logic_vector(3 downto 0);
+		slt_en	:	out	std_logic;
 		output	:	out	std_logic
 	);
-end alu1;
+end alu1_last;
 
-architecture arch of alu1 is 
+architecture arch of alu1_last is 
 	component add1
 		port(	
 			in1		:	in	std_logic;
@@ -41,13 +42,12 @@ architecture arch of alu1 is
 		sum_in		:	in	std_logic;
 		sub_in		:	in	std_logic;
 		and_in		:	in	std_logic;
-		or_in			:	in	std_logic;
+		or_in		:	in	std_logic;
 		nor_in		:	in	std_logic;
 		slt_in		:	in std_logic;
 		sltu_in		:	in	std_logic;
 		mux_out		:	out	std_logic	
 	);
-	
 	end component;
 
 signal invB		:	std_logic;	-- inverted iB signal
@@ -57,9 +57,8 @@ signal alu_sum	:	std_logic;	-- output of adder; input to function mux
 signal alu_and	:	std_logic;	-- output of ANDing module 
 signal alu_or	:	std_logic;	-- output of ORing module
 signal alu_nor	:	std_logic;	-- output of NORing module
-signal alu_slt	:	std_logic;	-- set if less than (signed) signal
+signal alu_slt:	std_logic;	-- set if less than (unsigned) signal
 signal alu_sltu:	std_logic;	-- set if less than (unsigned) signal
-
 
 begin
 	add_sub <= control(2);	-- mux sel for add/sub
@@ -85,14 +84,13 @@ begin
 -- port map the mux to select between different operations
 	ALU_FUNCT:
 	alu_mux port map(control,alu_sum,alu_sum,alu_and,alu_or,alu_nor,alu_slt,alu_sltu,output);
-	
+
+-- signal for slt output 
+slt_en <= alu_sum;
+
 -- signal for slt mux input
 alu_slt <= less; 
-
--- signal for slt mux input
+	
+-- signal for sltu mux input
 alu_sltu <= less; 
-
-
-	
-	
 end arch;
