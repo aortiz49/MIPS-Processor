@@ -1,16 +1,16 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity mux32 is
+entity regWrite_mux is
 	port(
-		in1		:	in	std_logic_vector(31 downto 0);
-		in0		:	in 	std_logic_vector(31 downto 0);
+		in0		:	in	std_logic_vector(4 downto 0);
+		in1		:	in std_logic_vector(4 downto 0);
 		sel		:	in	std_logic;
-		output		:	out std_logic_vector(31 downto 0)
+		output	:	out std_logic_vector(4 downto 0)
 	);
-end mux32;
+end regWrite_mux;
 
-architecture bhv of mux32 is
+architecture bhv of regWrite_mux is
 begin
 	process(in0,in1,sel)
 	begin
@@ -22,3 +22,4 @@ begin
 		end case;
 	end process;
 end bhv;
+

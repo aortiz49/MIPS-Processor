@@ -3,14 +3,14 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity alu32 is
- generic (
-    WIDTH :     positive := 32);
 	port(
-		ia		:	in	std_logic_vector(WIDTH-1 downto 0);
-		ib		:	in	std_logic_vector(WIDTH-1 downto 0);
+		ia		:	in	std_logic_vector(31 downto 0);
+		ib		:	in	std_logic_vector(31 downto 0);
+		shamt	:	in std_logic_vector(4 downto 0);
+		shdir	:	in std_logic;
 		C		:	out	std_logic;
 		control	:	in	std_logic_vector(3 downto 0);
-		output	:	out	std_logic_vector(WIDTH-1 downto 0);
+		output	:	out	std_logic_vector(31 downto 0);
 		Z 		:	out	std_logic;
 		S		:	out std_logic;
 		V		:	out	std_logic
@@ -32,24 +32,44 @@ architecture arch of alu32 is
 	end component;
 
 	component alu1_last
+		port(
+			ia		:	in	std_logic;
+			ib		:	in	std_logic;
+			less	:	in	std_logic;
+			cout	:	out	std_logic;
+			cin		:	in 	std_logic;
+			control	:	in	std_logic_vector(3 downto 0);
+			slt_en	:	out	std_logic;
+			output	:	out	std_logic
+		);
+	end component;
+	
+	component shifter
+		port( 
+			ib				: in std_logic_vector(31 downto 0);
+			shdir			: in std_logic;
+			shamt			: in std_logic_vector(4 downto 0);
+			q				: out std_logic_vector(31 downto 0)
+			);
+	end component;
+	
+	component mux32
 	port(
-		ia		:	in	std_logic;
-		ib		:	in	std_logic;
-		less	:	in	std_logic;
-		cout	:	out	std_logic;
-		cin		:	in 	std_logic;
-		control	:	in	std_logic_vector(3 downto 0);
-		slt_en	:	out	std_logic;
-		output	:	out	std_logic
+		in0		:	in	std_logic_vector(31 downto 0);
+		in1		:	in std_logic_vector(31 downto 0);
+		sel		:	in	std_logic;
+		output	:	out std_logic_vector(31 downto 0)
 	);
 	end component;
 
-signal temp_c	: 	std_logic_vector(WIDTH downto 0);
-signal temp_o	:	std_logic_vector(WIDTH-1 downto 0);
-signal temp_less:	std_logic_vector(WIDTH-1 downto 0);
-
+signal temp_c	: 	std_logic_vector(32 downto 0);
+signal temp_o	:	std_logic_vector(31 downto 0);
+signal temp_less:	std_logic_vector(31 downto 0);
+signal temp_ib	:	std_logic_vector(31 downto 0);
+signal temp_shift	: std_logic_vector(31 downto 0);
+signal sh_en		: std_logic;
 begin
-	alu: for i in 0 to WIDTH-2 generate	--generate 32 1-bit adders for alu32 entity
+	alu: for i in 0 to 30 generate	--generate 32 1-bit adders for alu32 entity
 		alu: alu1 
 			port map(
 				ia	=> ia(i),
@@ -72,10 +92,26 @@ begin
 			cin => temp_c(31),	-- cout will feed into cin
 			control => control,
 			slt_en => temp_less(0),
-			output => temp_o(31)	
-			
+			output => temp_o(31)				
+		);
+		
+	shift: shifter
+		port map(
+		ib => ib,
+		shdir => shdir,
+		shamt => shamt,
+		q	=> temp_shift
+		);
+		
+	mux: mux32
+		port map(
+			in0 => temp_o,
+			in1 => temp_shift,
+			sel => sh_en,
+			output => output
 			
 		);
+
 		
 	
 	
@@ -93,8 +129,10 @@ S	<= temp_o(31);
 -- V flag
 V	<= (temp_c(32) xor temp_c(31));
 
--- Wire from temp_out to output bus
-output(31 downto 0) <= temp_o(31 downto 0);
+-- shift enable 
+sh_en <= (not control(3) and not control(2) and control(1) and control(0));
+
+
 
 temp_less(31 downto 1) <= (others => '0');
 

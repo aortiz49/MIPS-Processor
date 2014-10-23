@@ -26,6 +26,16 @@ architecture ARCH of register_file is
 			q    		: 	out 	std_logic_vector(31 DOWNTO 0) -- output
 		);
 	end component;
+
+	component zeroReg
+		port(
+		  	clk       : in  std_logic;
+		    rst       : in  std_logic;
+		    en        : in  std_logic;
+		    input     : in  std_logic_vector(31 downto 0);
+		    output    : out std_logic_vector(31 downto 0)
+  );
+	end component;
 	
 	component decoder
 		port(
@@ -77,11 +87,12 @@ architecture ARCH of register_file is
 	
 	
 type t_interconnect is array (0 to 31) of std_logic_vector(31 downto 0); -- the new type
-signal interconnect		: t_interconnect;
+signal interconnect		: 	t_interconnect;
 signal en_t				:	std_logic_vector(31 downto 0);
+signal zero_reg			:	std_logic_vector(31 downto 0);
 
 	begin	
-	regs: for i in 0 to 31 generate	
+	regs: for i in 1 to 31 generate	
 		reg_bank: reg32 
 			port map(
 				d => data,
@@ -129,9 +140,9 @@ signal en_t				:	std_logic_vector(31 downto 0);
 			in05 => interconnect(05),
 			in04 => interconnect(04),
 			in03 => interconnect(03),
-			in02 => interconnect(03),
+			in02 => interconnect(02),
 			in01 => interconnect(01),
-			in00 => interconnect(00),
+			in00 => zero_reg,
 			sel => reg_read1,
 			output => output1		
 		);
@@ -167,13 +178,21 @@ signal en_t				:	std_logic_vector(31 downto 0);
 			in05 => interconnect(05),
 			in04 => interconnect(04),
 			in03 => interconnect(03),
-			in02 => interconnect(03),
+			in02 => interconnect(02),
 			in01 => interconnect(01),
-			in00 => interconnect(00),
+			in00 => zero_reg,
 			sel => reg_read0,
 			output => output0		
 		);
-
-
-
+		
+		
+	
+		zero: reg32
+			port map(
+				 d => x"00000000",
+			    en   => '1', 
+				 clk => clk,
+			    q  => zero_reg
+				
+			);
 end architecture;

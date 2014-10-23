@@ -1,25 +1,28 @@
-library ieee;
-use ieee.std_logic_1164.all;
+library ieee; 
+use ieee.std_logic_1164.all; 
+use ieee.numeric_std.all;
 
-entity reg32 is
-  port(clk       : in  std_logic;
-       rst       : in  std_logic;
-       en        : in  std_logic;
-       input     : in  std_logic_vector(31 downto 0);
-       output    : out std_logic_vector(31 downto 0)
-       );
-end reg32;
 
-architecture bhv of reg32 is
-begin
-  process(clk, rst)
-  begin
-    if rst = '1' then
-      output   <= (others => '0');
-    elsif (clk = '1' and clk'event) then
-      if (en = '1') then
-        output <= input;
+ENTITY reg32 IS 
+PORT(
+    d     :     IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+   en   :   in std_logic;
+    clk     :     IN STD_LOGIC; -- clock.
+    q     :     OUT STD_LOGIC_VECTOR(31 DOWNTO 0) -- output
+);
+END reg32;
+
+ARCHITECTURE description OF reg32 IS
+
+BEGIN
+    process(clk)
+    begin
+        
+      if rising_edge(clk) then
+        if (en = '1') then 
+                q <= d;
+            end if;
       end if;
-    end if;
-  end process;
-end bhv;
+      
+    end process;
+END description;
