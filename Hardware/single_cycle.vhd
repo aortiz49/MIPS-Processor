@@ -6,7 +6,7 @@ entity single_cycle is
 	port ( 
 		clk				:   in   	std_logic;
 		wr_en			:	in		std_logic;
-		ALUsrc			:	in		std_logic;
+		ALUsrc			:	in		std_logic;		
 		
 		
 		temp_control 	:	in		std_logic_vector(3 downto 0);
@@ -26,7 +26,8 @@ entity single_cycle is
 		temp_read0		:	out		std_logic_vector(4 downto 0);
 		shamt			:	in		std_logic_vector(4 downto 0);
 		shdir			:	in		std_logic;
-		en				:	in		std_logic
+		en				:	in		std_logic;
+		temp_write	:	out	std_logic_vector(4 downto 0)
 		
     ); 
 end single_cycle;
@@ -37,6 +38,7 @@ architecture bhv of single_cycle is
 		port ( 
 			clk				:   in   	std_logic;
 	      data			    :   in   	std_logic_vector (31 downto 0);
+			rst			:		in		std_logic;
 			reg_write		:	in		std_logic_vector(4 downto 0);
 			wr_en			:	in		std_logic;
 			reg_read1		:	in 		std_logic_vector(4 downto 0);
@@ -147,6 +149,7 @@ begin
 		port map(
 			clk => clk,
 			data => ALU_result,
+			rst => temp_rst,
 			reg_write => temp_mux_out,
 			wr_en => wr_en,
 			reg_read1 => temp_ram_out(25 downto 21), -- rs
@@ -225,6 +228,7 @@ temp_out0 <= reg_file_out_0;
 temp_extend <= zero_ext_signal;
 temp_read1 <= temp_ram_out(25 downto 21);
 temp_read0 <= temp_ram_out(20 downto 16);
+temp_write <= temp_mux_out;
 
  
 end bhv;

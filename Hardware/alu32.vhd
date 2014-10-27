@@ -68,6 +68,8 @@ signal temp_less:	std_logic_vector(31 downto 0);
 signal temp_ib	:	std_logic_vector(31 downto 0);
 signal temp_shift	: std_logic_vector(31 downto 0);
 signal sh_en		: std_logic;
+
+
 begin
 	alu: for i in 0 to 30 generate	--generate 32 1-bit adders for alu32 entity
 		alu: alu1 

@@ -37,7 +37,7 @@ begin
 			
 	end generate;
 
-temp_c(0) <= '0';
+
 
 end arch;
 
