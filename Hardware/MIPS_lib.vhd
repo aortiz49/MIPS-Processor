@@ -18,6 +18,7 @@ package MIPS_lib is
 	constant 	BEQ			:		std_logic_vector(2 downto 0)	:=	"001";		-- sub
 	constant 	ANDI		:		std_logic_vector(2 downto 0)	:=	"000";		-- and
 	constant 	ORI			:		std_logic_vector(2 downto 0)	:=	"011";		-- or
+	constant	LUI			:		std_logic_vector(2 downto 0)	:=  "101";		-- shift
 	constant 	R_TYPE		:		std_logic_vector(2 downto 0)	:=	"100";		-- R-type (varied)
 --------------------------------------------------------------------------------------------
 

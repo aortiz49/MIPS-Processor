@@ -18,14 +18,16 @@ begin
 	process(ALUop, funct)
 		begin
 	    	case ALUop is
-	      		when LW_SW =>						-- Add for load/store 
+	      		when LW_SW	=>						-- Add for load/store 
 		        	control <= F_SUM;
-		      	when BEQ =>							-- sub for branching 
+		      	when BEQ 	=>							-- sub for branching 
 		      		control <= F_SUB;
-				when ANDI =>
+				when ANDI 	=>						-- and immetiate
 					control <= F_AND;
-				when ORI =>
-					control <= F_OR;		      				 
+				when ORI 	=>							-- or immediate
+					control <= F_OR;		      			
+				when LUI 	=>	 
+					control <= F_SHFT;
 		      	when R_TYPE =>						-- R-type instructions
 		        	case funct IS
 				        when CTRL_ADD =>

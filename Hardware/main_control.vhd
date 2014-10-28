@@ -5,15 +5,14 @@ use work.MIPS_lib.all;
 entity main_control is
 
 	port(									
-		op_code		  			: 	in		std_logic_vector(5 downto 0);		
-		pc_rst					:	out		std_logic;						-- Reset program counter
-		pc_en					:	out 	std_logic;						-- enable a pc inc
-		RegDst					:	out		std_logic;
-		RegWr					:	out		std_logic;
+		op_code		  			: 	in		std_logic_vector(5 downto 0);	
+		RegDst					:	out		std_logic;	
 		ALUsrc					:	out		std_logic;
+		MemtoReg				:	out 	std_logic;
+		RegWrite				:	out		std_logic;					
 		shdir					:	out		std_logic;
 		shamt					:	out		std_logic_vector(4 downto 0);
-		ALUctrl					:	out		std_logic_vector(3 downto 0)	-- Set actual opcode(temp cheap solution for now)
+		ALUOp					:	out		std_logic_vector(2 downto 0)	-- Set actual opcode(temp cheap solution for now)
 	);	
 end main_control;		
 
@@ -23,16 +22,21 @@ begin
 
 	process(op_code)					-- process for state determination
 	begin		
-		pc_rst <='1';
+		RegDst		<=	'0';
+		ALUsrc 		<= 	'0';
+		MemtoReg 	<= 	'0';
+		RegWrite 	<= 	'0';
+		shdir		<= 	'0';
+		shamt		<=	(others => '0');
+		ALUop		<=	(others => '0');		
 		case op_code is
 			when OPC_LUI =>
-				pc_en <= '1';
-				RegDst <= '0';				
-				RegWr <= '1';
-				ALUsrc <= '1';
-				ALUctrl <= "0011";
-				shdir <= '0'; -- sh left
-				shamt <= "10000";
+				ALUsrc		<=	'1';			-- Select extended 32-bit value	
+				RegWrite	<=	'1';			-- Enable register write to store value in destination reg
+				shamt		<=	"10000";		-- Shift left 16 bits
+				ALUOp		<=	LUI;			-- Set ALUOp to LUI
+			when others =>
+				
 		end case;
 	end process;
 end BHV;
