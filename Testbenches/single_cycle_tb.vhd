@@ -26,8 +26,14 @@ component single_cycle
 		RegFileOut1		:	out		std_logic_vector(31 downto 0);
 		RegFileOut0		:	out		std_logic_vector(31 downto 0);
 		Extend_out		:	out		std_logic_vector(31 downto 0);
-		ALU_Result_out	:	out		std_logic_vector(31 downto 0)		
-    );   
+		ALU_Result_out	:	out		std_logic_vector(31 downto 0);
+		pc_rst_out		:	out		std_logic;
+		C				:	out		std_logic;
+		S				:	out		std_logic;
+		V				:	out		std_logic;
+		Z				:	out		std_logic;
+		ExtOp_out		:	out		std_logic		
+    );  
 end component;
 
 
@@ -37,6 +43,7 @@ signal		instruction		:			std_logic_vector(31 downto 0);
 signal		ALUsrc_out		:			std_logic;
 signal		RegDst_out		:			std_logic;
 signal		RegWrite_out	:			std_logic;
+signal 		pc_rst 			:			std_logic;
 signal		shdir_out		:			std_logic;
 signal		shamt_out		:			std_logic_vector(4 downto 0);
 signal		ALUOp_out		:			std_logic_vector(2 downto 0);
@@ -48,7 +55,11 @@ signal		RegFileOut1		:			std_logic_vector(31 downto 0);
 signal		RegFileOut0		:			std_logic_vector(31 downto 0);
 signal		Extend_out		:			std_logic_vector(31 downto 0);
 signal		ALU_Result_out	:			std_logic_vector(31 downto 0);
-signal 		pc_rst 			:			std_logic;
+signal 		C				:			std_logic;
+signal		S				:			std_logic;
+signal		V				:			std_logic;
+signal		Z				:			std_logic;
+signal		ExtOp_out		:			std_logic;	
 
 
 begin
@@ -73,7 +84,14 @@ single_cycle1: single_cycle
 		RegFileOut1			=>		RegFileOut1,
 		RegFileOut0			=>		RegFileOut0,
 		Extend_out			=>		Extend_out,
-		ALU_Result_out		=>		ALU_Result_out
+		ALU_Result_out		=>		ALU_Result_out,
+		C					=>		C,
+		S					=>		S,
+		V					=>		V,
+		Z					=>		Z,
+		Extop_out			=>		ExtOp_out
+		
+		
 
 
 	);

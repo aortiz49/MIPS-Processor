@@ -12,7 +12,8 @@ entity main_control is
 		RegWrite				:	out		std_logic;					
 		shdir					:	out		std_logic;
 		shamt					:	out		std_logic_vector(4 downto 0);
-		ALUOp					:	out		std_logic_vector(2 downto 0)	-- Set actual opcode(temp cheap solution for now)
+		ALUOp					:	out		std_logic_vector(2 downto 0);
+		ExtOp					:	out		std_logic					
 	);	
 end main_control;		
 
@@ -28,14 +29,21 @@ begin
 		RegWrite 	<= 	'0';
 		shdir		<= 	'0';
 		shamt		<=	(others => '0');
-		ALUop		<=	(others => '0');		
+		ALUop		<=	(others => '0');	
+		ExtOp		<=	'0';	
 		case op_code is
-			when OPC_LUI =>
+			when OPC_LUI		=>
 				ALUsrc		<=	'1';			-- Select extended 32-bit value	
 				RegWrite	<=	'1';			-- Enable register write to store value in destination reg
 				shamt		<=	"10000";		-- Shift left 16 bits
 				ALUOp		<=	LUI;			-- Set ALUOp to LUI
-			when others =>
+			when OPC_R 			=>
+				RegDst		<=	'1';			-- Set RegWrite mux write to Rd
+				RegWrite	<=	'1';			-- Write result to RegFile
+				ALUop		<=	R_TYPE;			-- ALUop is an R-Type
+			when others			=>
+				
+				
 				
 		end case;
 	end process;

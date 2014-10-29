@@ -65,7 +65,7 @@ architecture arch of alu32 is
 signal temp_c	: 	std_logic_vector(32 downto 0);
 signal temp_o	:	std_logic_vector(31 downto 0);
 signal temp_less:	std_logic_vector(31 downto 0);
-signal temp_ib	:	std_logic_vector(31 downto 0);
+signal temp_out	:	std_logic_vector(31 downto 0);
 signal temp_shift	: std_logic_vector(31 downto 0);
 signal sh_en		: std_logic;
 
@@ -110,7 +110,7 @@ begin
 			in0 => temp_o,
 			in1 => temp_shift,
 			sel => sh_en,
-			output => output
+			output => temp_out
 			
 		);
 
@@ -122,11 +122,11 @@ temp_c(0) <= control(2);	-- Set cin to first adder to 0. Leaving it blank will r
 C <= temp_c(32);
 
 -- Z flag
-Z	<= not (temp_o(31) or temp_o(30) or temp_o(29) or temp_o(28) or temp_o(27) or temp_o(26) or temp_o(25) or temp_o(24) or temp_o(23) or temp_o(22) or temp_o(21) or temp_o(20) or temp_o(19) or temp_o(18) or temp_o(17) or temp_o(16) or temp_o(15) or temp_o(14) or temp_o(13) or temp_o(12) or temp_o(11) or temp_o(10) or temp_o(9) or temp_o(8)or temp_o(7) or temp_o(6) or temp_o(29) or temp_o(28) or temp_o(27) or temp_o(26) or temp_o(25) or temp_o(24)
-or temp_o(5) or temp_o(4) or temp_o(3) or temp_o(2) or temp_o(1) or temp_o(0)); 
+Z	<= not (temp_out(31) or temp_out(30) or temp_out(29) or temp_out(28) or temp_out(27) or temp_out(26) or temp_out(25) or temp_out(24) or temp_out(23) or temp_out(22) or temp_out(21) or temp_out(20) or temp_out(19) or temp_out(18) or temp_out(17) or temp_out(16) or temp_out(15) or temp_out(14) or temp_out(13) or temp_out(12) or temp_out(11) or temp_out(10) or temp_out(9) or temp_out(8)or temp_out(7) or temp_out(6) or temp_out(29) or temp_out(28) or temp_out(27) or temp_out(26) or temp_out(25) or temp_out(24)
+or temp_out(5) or temp_out(4) or temp_out(3) or temp_out(2) or temp_out(1) or temp_out(0)); 
 
 -- S flag 
-S	<= temp_o(31);
+S	<= temp_out(31);
 
 -- V flag
 V	<= (temp_c(32) xor temp_c(31));
@@ -134,11 +134,9 @@ V	<= (temp_c(32) xor temp_c(31));
 -- shift enable 
 sh_en <= (not control(3) and not control(2) and control(1) and control(0));
 
-
-
 temp_less(31 downto 1) <= (others => '0');
 
-
+output <= temp_out;
 
 
  
