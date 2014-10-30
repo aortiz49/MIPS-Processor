@@ -109,17 +109,24 @@ architecture bhv of single_cycle is
 		);
 	end component; 
 	
-
+	component mux32 is
+		port(
+			in1			:	in	std_logic_vector(31 downto 0);
+			in0			:	in 	std_logic_vector(31 downto 0);
+			sel			:	in	std_logic;
+			output		:	out std_logic_vector(31 downto 0)		
+		);
+	end component;
 	
 	component main_control is
 		port(
 			op_code		: 	in		std_logic_vector(5 downto 0);	
+			shamt_in	:	in		std_logic_vector(4 downto 0);
 			RegDst		:	out		std_logic;	
 			ALUsrc		:	out		std_logic;
 			MemtoReg	:	out 	std_logic;
 			RegWrite	:	out		std_logic;					
-			shdir		:	out		std_logic;
-			shamt		:	out		std_logic_vector(4 downto 0);
+			shamt_out	:	out		std_logic_vector(4 downto 0);
 			ALUOp		:	out		std_logic_vector(2 downto 0);
 			ExtOp		:	out		std_logic
 		);
@@ -127,9 +134,10 @@ architecture bhv of single_cycle is
 	
 	component alu32control is
 		port( 
-	      ALUop			: in     std_logic_vector (2 downto 0);
-	      funct			: in     std_logic_vector (5 downto 0);
-	      control 		: out    std_logic_vector (3 downto 0)
+			ALUop		: 	in     	std_logic_vector (2 downto 0);
+		    funct		: 	in     	std_logic_vector (5 downto 0);
+		    control 	: 	out    	std_logic_vector (3 downto 0);
+		    shdir		:	out		std_logic
   		 );
   	end component;
 		
@@ -158,6 +166,7 @@ signal 	shamt			:	std_logic_vector(4 downto 0);
 signal 	ALUOp			:	std_logic_vector(2 downto 0);
 signal 	ALUControl		:	std_logic_vector(3 downto 0);
 signal 	ExtOp			:	std_logic;
+
 
 
     
@@ -227,7 +236,7 @@ begin
 			out0		=> 	zero_ext_signal			
 		);
 		
-	alu_src_mux: work.mux32
+	alu_src_mux: mux32
 		port map(
 			in1	=>	zero_ext_signal,
 			in0 => 	reg_file_out_0,
@@ -238,12 +247,12 @@ begin
 	controller: main_control
 		port map(
 			op_code		=> 	temp_ram_out(31 downto 26),	
+			shamt_in	=>	temp_ram_out(10 downto 6),
 			RegDst		=>	RegDst,						
 			ALUsrc		=>	ALUsrc,		
 			MemtoReg	=>	MemtoReg,		
-			RegWrite	=>	RegWrite,							
-			shdir		=> 	shdir,			
-			shamt		=>	shamt,		
+			RegWrite	=>	RegWrite,										
+			shamt_out	=>	shamt,		
 			ALUOp		=> 	ALUOp,
 			ExtOp		=>	ExtOp	
 		);
@@ -252,7 +261,8 @@ begin
 		port map(
 			ALUOp		=>	ALUOp,
 			funct		=> 	temp_ram_out(5 downto 0),
-			control		=>	ALUControl
+			control		=>	ALUControl,
+			shdir		=>	shdir		
 		);
 		
 		
