@@ -27,7 +27,7 @@ component single_cycle
 		RegFileOut0		:	out		std_logic_vector(31 downto 0);
 		Extend_out		:	out		std_logic_vector(31 downto 0);
 		ALU_Result_out	:	out		std_logic_vector(31 downto 0);
-		pc_rst_out		:	out		std_logic;
+		MemWrite_out	:	out		std_logic;
 		C				:	out		std_logic;
 		S				:	out		std_logic;
 		V				:	out		std_logic;
@@ -43,6 +43,7 @@ signal		instruction		:			std_logic_vector(31 downto 0);
 signal		ALUsrc_out		:			std_logic;
 signal		RegDst_out		:			std_logic;
 signal		RegWrite_out	:			std_logic;
+signal 		MemWrite_out	:			std_logic;
 signal 		pc_rst 			:			std_logic;
 signal		shdir_out		:			std_logic;
 signal		shamt_out		:			std_logic_vector(4 downto 0);
@@ -85,6 +86,7 @@ single_cycle1: single_cycle
 		RegFileOut0			=>		RegFileOut0,
 		Extend_out			=>		Extend_out,
 		ALU_Result_out		=>		ALU_Result_out,
+		MemWrite_out		=>		MemWrite_out,
 		C					=>		C,
 		S					=>		S,
 		V					=>		V,
