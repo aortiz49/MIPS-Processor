@@ -3,8 +3,8 @@ use ieee.std_logic_1164.all;
 
 entity regWrite_mux is
 	port(
-		in1		:	in	std_logic_vector(4 downto 0);
-		in0		:	in std_logic_vector(4 downto 0);
+		in0		:	in	std_logic_vector(4 downto 0);
+		in1		:	in std_logic_vector(4 downto 0);
 		sel		:	in	std_logic;
 		output	:	out std_logic_vector(4 downto 0)
 	);

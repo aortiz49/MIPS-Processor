@@ -6,7 +6,7 @@ entity mux1 is
 		in0		:	in	std_logic;
 		in1		:	in 	std_logic;
 		sel		:	in	std_logic;
-		output		:	out std_logic
+		output	:	out std_logic
 	);
 end mux1;
 

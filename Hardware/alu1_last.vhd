@@ -27,14 +27,15 @@ architecture arch of alu1_last is
 		);
 	end component;
 ---	
-	component mux1
+	component mux1		-- Negate mux
 		port(
 			in0		:	in	std_logic;
 			in1		:	in 	std_logic;
 			sel		:	in	std_logic;
 			output	:	out std_logic
 	);		
-	end component;
+end component;
+
 ---
 	component alu_mux
 	port(
@@ -57,8 +58,10 @@ signal alu_sum	:	std_logic;	-- output of adder; input to function mux
 signal alu_and	:	std_logic;	-- output of ANDing module 
 signal alu_or	:	std_logic;	-- output of ORing module
 signal alu_nor	:	std_logic;	-- output of NORing module
-signal alu_slt:	std_logic;	-- set if less than (unsigned) signal
-signal alu_sltu:	std_logic;	-- set if less than (unsigned) signal
+signal alu_slt	:	std_logic;	-- set if less than (unsigned) signal
+signal alu_sltu	:	std_logic;	-- set if less than (unsigned) signal
+signal cout_t	:	std_logic;	
+
 
 begin
 	add_sub <= control(2);	-- mux sel for add/sub
@@ -74,7 +77,7 @@ begin
 
 -- port map the adder within alu. When subtracting, set carry bit [A-B = A+(~B+1)]
 	ALU_ADD:	
-	add1 port map(ia,newB,cin,cout,alu_sum);	
+	add1 port map(ia,newB,cin,cout_t,alu_sum);	
 		
 -- mux to select between iB being normal or complemented	
 	invB <= not iB;
@@ -85,12 +88,15 @@ begin
 	ALU_FUNCT:
 	alu_mux port map(control,alu_sum,alu_sum,alu_and,alu_or,alu_nor,alu_slt,alu_sltu,output);
 
--- signal for slt output 
-slt_en <= alu_sum;
+	ALU_LESS:
+	mux1 port map(alu_sum,"not"(cout_t),control(3),slt_en);
 
 -- signal for slt mux input
 alu_slt <= less; 
 	
 -- signal for sltu mux input
 alu_sltu <= less; 
+
+-- cout output
+cout	<=	cout_t;
 end arch;

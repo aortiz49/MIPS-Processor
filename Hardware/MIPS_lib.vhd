@@ -14,12 +14,13 @@ package MIPS_lib is
 --------------------------------------------------------------------------------------------
 
 --ALU OP------------------------------------------------------------------------------------
-	constant 	LW_SW		:		std_logic_vector(2 downto 0)	:=	"010";		-- add
+	constant 	LW_SW		:		std_logic_vector(2 downto 0)	:=	"000";		-- add
 	constant 	BEQ			:		std_logic_vector(2 downto 0)	:=	"001";		-- sub
-	constant 	ANDI		:		std_logic_vector(2 downto 0)	:=	"000";		-- and
+	constant 	ANDI		:		std_logic_vector(2 downto 0)	:=	"010";		-- and
 	constant 	ORI			:		std_logic_vector(2 downto 0)	:=	"011";		-- or
 	constant	LUI			:		std_logic_vector(2 downto 0)	:=  "101";		-- shift
 	constant 	R_TYPE		:		std_logic_vector(2 downto 0)	:=	"100";		-- R-type (varied)
+	constant	ADDI		:		std_logic_vector(2 downto 0)	:=	"110";		-- add-imm
 --------------------------------------------------------------------------------------------
 
 --ALU FUNCT---------------------------------------------------------------------------------
@@ -34,7 +35,10 @@ package MIPS_lib is
 
 --INSTRUCTIONS------------------------------------------------------------------------------
 	constant	OPC_LUI		:		std_logic_vector(5 downto 0)	:=	"001111";	-- lui 
-
+	constant	OPC_ANDI	:		std_logic_vector(5 downto 0)	:=	"001100";	-- andi
+	constant	OPC_ORI		:		std_logic_vector(5 downto 0)	:=	"001101";	-- ori	
+	constant	OPC_ADDI	:		std_logic_vector(5 downto 0)	:=	"001000";	-- addi
+	constant	OPC_R		:		std_logic_vector(5 downto 0)	:=	"000000";	-- r-types
 
 	
 END MIPS_lib;

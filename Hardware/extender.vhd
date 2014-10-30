@@ -6,15 +6,16 @@ use ieee.numeric_std.all;
 entity extender is
 	port(
 		in0		:	in	std_logic_vector(15 downto 0);
-		Sel		:	in	std_logic;
-		out0	:	out	std_logic_vector(31 downto 0));		
+		ExtOp	:	in	std_logic;
+		out0	:	out	std_logic_vector(31 downto 0)
+		);		
 end extender;
 
 architecture bhv of extender is
 begin
-	process(in0,Sel)
+	process(in0,ExtOp)
 	begin
-		case sel is
+		case ExtOp is
 			when '0' => 
 				out0 <= (31 downto 16 => '0') & in0;
 			when others =>

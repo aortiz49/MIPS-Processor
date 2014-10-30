@@ -5,10 +5,10 @@ use ieee.numeric_std.all;
 entity register_file is
 	port ( 
 		clk				:   in   	std_logic;
-      	data			:   in   	std_logic_vector (31 downto 0);
-      	rst				:	in		std_logic;
+     	data			:   in   	std_logic_vector (31 downto 0);
+		rst		:		in		std_logic;
 		reg_write		:	in		std_logic_vector(4 downto 0);
-		RegWr			:	in		std_logic;
+		wr_en			:	in		std_logic;
 		reg_read1		:	in 		std_logic_vector(4 downto 0);
 		reg_read0		:	in 		std_logic_vector(4 downto 0);
 		output1			:	out		std_logic_vector(31 downto 0);
@@ -22,7 +22,7 @@ architecture ARCH of register_file is
 	component reg32
 		port(
 			d			:	in		std_logic_vector(31 DOWNTO 0);
-			rst			:	in		std_logic;
+			rst	:	in	std_logic;
 			en			:   in 		std_logic;
 			clk 		: 	in 		std_logic; -- clock.
 			q    		: 	out 	std_logic_vector(31 DOWNTO 0) -- output
@@ -36,7 +36,7 @@ architecture ARCH of register_file is
 		    en        : in  std_logic;
 		    input     : in  std_logic_vector(31 downto 0);
 		    output    : out std_logic_vector(31 downto 0)
-  );
+  		);
 	end component;
 	
 	component decoder
@@ -98,7 +98,7 @@ signal zero_reg			:	std_logic_vector(31 downto 0);
 		reg_bank: reg32 
 			port map(
 				d => data,
-				rst	=> rst,
+				rst => rst,
 				en => en_t(i),
 				clk => clk,
 				q => interconnect(i)
@@ -108,7 +108,7 @@ signal zero_reg			:	std_logic_vector(31 downto 0);
 	decode : decoder
 		port map(
 			enable => reg_write,
-			wr_en => RegWr,
+			wr_en => wr_en,
 			decode_out => en_t(31 downto 0)	
 		);
 		
@@ -145,7 +145,7 @@ signal zero_reg			:	std_logic_vector(31 downto 0);
 			in03 => interconnect(03),
 			in02 => interconnect(02),
 			in01 => interconnect(01),
-			in00 => zero_reg,
+			in00 => x"00000000",
 			sel => reg_read1,
 			output => output1		
 		);
@@ -183,20 +183,23 @@ signal zero_reg			:	std_logic_vector(31 downto 0);
 			in03 => interconnect(03),
 			in02 => interconnect(02),
 			in01 => interconnect(01),
-			in00 => zero_reg,
+			in00 => x"00000000",
 			sel => reg_read0,
 			output => output0		
 		);
 		
+		zero:zeroReg
+			port map(
+				
+				clk   	=>	clk,
+			    rst     =>	rst,  
+			    en     	=>	'0',  
+			    input   => 	data,
+			    output  => interconnect(00)
+  		);
+  		
+		
 		
 	
-		zero: zeroReg
-			port map(
-				clk	=> clk,
-			    rst  => '1',
-			    en   => '0', 
-			    input => data,
-			    output  => zero_reg
-				
-			);
+
 end architecture;

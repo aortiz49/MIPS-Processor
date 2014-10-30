@@ -109,14 +109,7 @@ architecture bhv of single_cycle is
 		);
 	end component; 
 	
-	component mux32 is
-		port(
-			in1			:	in	std_logic_vector(31 downto 0);
-			in0			:	in 	std_logic_vector(31 downto 0);
-			sel			:	in	std_logic;
-			output		:	out std_logic_vector(31 downto 0)		
-		);
-	end component;
+
 	
 	component main_control is
 		port(
@@ -165,7 +158,6 @@ signal 	shamt			:	std_logic_vector(4 downto 0);
 signal 	ALUOp			:	std_logic_vector(2 downto 0);
 signal 	ALUControl		:	std_logic_vector(3 downto 0);
 signal 	ExtOp			:	std_logic;
-
 
 
     
@@ -235,7 +227,7 @@ begin
 			out0		=> 	zero_ext_signal			
 		);
 		
-	alu_src_mux: mux32
+	alu_src_mux: work.mux32
 		port map(
 			in1	=>	zero_ext_signal,
 			in0 => 	reg_file_out_0,

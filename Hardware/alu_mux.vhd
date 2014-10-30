@@ -9,7 +9,7 @@ entity alu_mux is
 		sum_in		:	in	std_logic;
 		sub_in		:	in	std_logic;
 		and_in		:	in	std_logic;
-		or_in		:	in	std_logic;
+		or_in			:	in	std_logic;
 		nor_in		:	in	std_logic;
 		slt_in		:	in	std_logic;
 		sltu_in		:	in	std_logic;

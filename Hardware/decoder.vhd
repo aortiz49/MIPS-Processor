@@ -78,8 +78,10 @@ begin
 					decode_out <= "00100000000000000000000000000000";
 				when "11110" =>
 					decode_out <= "01000000000000000000000000000000";
-				when others =>
+				when "11111" =>
 					decode_out <= "10000000000000000000000000000000";
+				when others =>
+					decode_out <= 	(others => 'X');
 			end case;
 		else
 			decode_out <= "00000000000000000000000000000000";			
