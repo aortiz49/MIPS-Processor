@@ -59,6 +59,8 @@ signal 	shamt			:	std_logic_vector(4 downto 0);
 signal 	ALUOp			:	std_logic_vector(2 downto 0);
 signal 	ALUControl		:	std_logic_vector(3 downto 0);
 signal 	ExtOp			:	std_logic;
+signal	ByteEn			:	std_logic_vector(3 downto 0);
+
 
 
 
@@ -145,7 +147,8 @@ begin
 			ALUsrc		=>	ALUsrc,		
 			MemtoReg	=>	MemtoReg,		
 			MemWrite	=>	MemWrite,
-			RegWrite	=>	RegWrite,										
+			RegWrite	=>	RegWrite,	
+			ByteEn		=>	ByteEn,									
 			shamt_out	=>	shamt,		
 			ALUOp		=> 	ALUOp,
 			ExtOp		=>	ExtOp	
@@ -162,7 +165,7 @@ begin
 	datamemory: entity work.data_mem
 		port map(
 			address 	=> 	ALU_result(7 downto 0),
-			byteena 	=> 	open,
+			byteena 	=> 	ByteEn,
 			clock   	=> 	clk,
 			data    	=> 	reg_file_out_0,
 			wren    	=> 	MemWrite,		
