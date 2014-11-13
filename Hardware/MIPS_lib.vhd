@@ -28,14 +28,17 @@ package MIPS_lib is
 --ALU FUNCT---------------------------------------------------------------------------------
 	constant 	CTRL_ADD	:		std_logic_vector(5 downto 0)	:=	"100000";	-- add
 	constant 	CTRL_ADDU	:		std_logic_vector(5 downto 0)	:=	"100001";	-- addu
-	constant 	CTRL_SUB	:		std_logic_vector(5 downto 0)	:=	"100010";	-- subtract
+	constant 	CTRL_SUB	:		std_logic_vector(5 downto 0)	:=	"100010";	-- sub
 	constant 	CTRL_AND	:		std_logic_vector(5 downto 0)	:=	"100100";	-- and
 	constant 	CTRL_OR		:		std_logic_vector(5 downto 0)	:=	"100101";	-- or
 	constant 	CTRL_NOR	:		std_logic_vector(5 downto 0)	:=	"100111";	-- nor
 	constant 	CTRL_SLT	:		std_logic_vector(5 downto 0)	:=	"101010";	-- slt 
 	constant	CTRL_SLL	:		std_logic_vector(5 downto 0)	:=	"000000";	-- sll
 	constant	CTRL_SRL	:		std_logic_vector(5 downto 0)	:=	"000010";	-- srl
-	constant 	CTRL_SLTU	:		std_logic_vector(5 downto 0)	:=	"101011";	-- sltu 
+	constant 	CTRL_SLTU	:		std_logic_vector(5 downto 0)	:=	"101011";	-- sltu
+	constant 	CTRL_JR		:		std_logic_vector(5 downto 0)	:=	"001000";	-- jr
+	constant 	CTRL_SUBU	:		std_logic_vector(5 downto 0)	:=	"100011";	-- sub unsigned
+	
 --------------------------------------------------------------------------------------------
 
 --INSTRUCTIONS------------------------------------------------------------------------------
@@ -47,6 +50,16 @@ package MIPS_lib is
 	constant	OPC_ADDI	:		std_logic_vector(5 downto 0)	:=	"001000";	-- addi
 	constant	OPC_ADDIU	:		std_logic_vector(5 downto 0)	:=	"001001";	-- addiu	
 	constant	OPC_R		:		std_logic_vector(5 downto 0)	:=	"000000";	-- r-types
-
-	
+	constant 	OPC_SB		:		std_logic_vector(5 downto 0)	:=	"101000";	-- sb
+	constant 	OPC_SH		:		std_logic_vector(5 downto 0)	:=	"101001";	-- sh
+	constant 	OPC_J		:		std_logic_vector(5 downto 0)	:=	"000010";	-- j
+	constant 	OPC_JAL		:		std_logic_vector(5 downto 0)	:=	"000011";	-- jal
+	constant 	OPC_BEQ		:		std_logic_vector(5 downto 0)	:=	"000100";	-- beq
+	constant 	OPC_BNEQ	:		std_logic_vector(5 downto 0)	:=	"000101";	-- bneq
+	constant	OPC_SW		:		std_logic_vector(5 downto 0)	:=	"101011";	-- sw
+	constant	OPC_LW		:		std_logic_vector(5 downto 0)	:=	"100011";	-- lw
+	constant	OPC_LBU		:		std_logic_vector(5 downto 0)	:=	"100100";	-- lbu
+	constant	OPC_LHU		:		std_logic_vector(5 downto 0)	:=	"100101";	-- lbu
+																	
+																
 END MIPS_lib;

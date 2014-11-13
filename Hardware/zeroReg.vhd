@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 
 entity zeroReg is
   port(
-    clk       : in  std_logic;
+  	clk       : in  std_logic;
     rst       : in  std_logic;
     en        : in  std_logic;
     input     : in  std_logic_vector(31 downto 0);

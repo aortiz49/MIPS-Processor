@@ -16,7 +16,7 @@ begin
     if rst = '1' then
       output   <= x"00400000";
   elsif (clk = '1' and clk'event) then
-      output <= input;
+  		output <= input;
     end if;
   end process;
 end bhv;

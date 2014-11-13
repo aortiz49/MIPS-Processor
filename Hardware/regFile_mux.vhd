@@ -113,10 +113,8 @@ begin
 					output <= in29;
 				when "11110" =>
 					output <= in30;
-				when "11111" =>
-					output <= in31;
 				when others =>
-					output <= (others => 'X');
+					output <= in31;
 			end case;
 	end process;
 end bhv;

@@ -1,16 +1,17 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity mux1 is
+entity mux_gen is
+	generic ( width : integer := 32 );
 	port(
-		in0		:	in	std_logic;
-		in1		:	in 	std_logic;
+		in1		:	in	std_logic_vector(width-1 downto 0);
+		in0		:	in 	std_logic_vector(width-1 downto 0);
 		sel		:	in	std_logic;
-		output		:	out std_logic
+		output		:	out std_logic_vector(width-1 downto 0)
 	);
-end mux1;
+end mux_gen;
 
-architecture bhv of mux1 is
+architecture bhv of mux_gen is
 begin
 	process(in0,in1,sel)
 	begin

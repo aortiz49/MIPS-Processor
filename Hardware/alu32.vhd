@@ -19,48 +19,7 @@ entity alu32 is
 end alu32;
 
 architecture arch of alu32 is
-	component alu1
-	port(
-		ia		:	in	std_logic;
-		ib		:	in	std_logic;
-		less	:	in	std_logic;
-		cout	:	out	std_logic;
-		cin		:	in 	std_logic;
-		control	:	in	std_logic_vector(3 downto 0);
-		output	:	out	std_logic
-	);
-	end component;
 
-	component alu1_last
-		port(
-			ia		:	in	std_logic;
-			ib		:	in	std_logic;
-			less	:	in	std_logic;
-			cout	:	out	std_logic;
-			cin		:	in 	std_logic;
-			control	:	in	std_logic_vector(3 downto 0);
-			slt_en	:	out	std_logic;
-			output	:	out	std_logic
-		);
-	end component;
-	
-	component shifter
-		port( 
-			ib				: in std_logic_vector(31 downto 0);
-			shdir			: in std_logic;
-			shamt			: in std_logic_vector(4 downto 0);
-			q				: out std_logic_vector(31 downto 0)
-			);
-	end component;
-	
-	component mux32
-	port(
-		in0		:	in	std_logic_vector(31 downto 0);
-		in1		:	in std_logic_vector(31 downto 0);
-		sel		:	in	std_logic;
-		output	:	out std_logic_vector(31 downto 0)
-	);
-	end component;
 
 signal temp_c	: 	std_logic_vector(32 downto 0);
 signal temp_o	:	std_logic_vector(31 downto 0);
@@ -72,7 +31,7 @@ signal sh_en		: std_logic;
 
 begin
 	alu: for i in 0 to 30 generate	--generate 32 1-bit adders for alu32 entity
-		alu: alu1 
+		alu: entity work.alu1 
 			port map(
 				ia	=> ia(i),
 				ib	=> ib(i),	
@@ -85,7 +44,7 @@ begin
 			
 	end generate;
 	
-	alu32: alu1_last
+	alu32: entity work.alu1_last
 		port map(
 			ia	=> ia(31),
 			ib	=> ib(31),	
@@ -97,7 +56,7 @@ begin
 			output => temp_o(31)				
 		);
 		
-	shift: shifter
+	shift: entity work.shifter
 		port map(
 		ib => ib,
 		shdir => shdir,
@@ -105,7 +64,8 @@ begin
 		q	=> temp_shift
 		);
 		
-	mux: mux32
+	mux: entity work.mux_gen
+		generic map(width => 32)
 		port map(
 			in0 => temp_o,
 			in1 => temp_shift,
@@ -122,8 +82,12 @@ temp_c(0) <= control(2);	-- Set cin to first adder to 0. Leaving it blank will r
 C <= temp_c(32);
 
 -- Z flag
-Z	<= not (temp_out(31) or temp_out(30) or temp_out(29) or temp_out(28) or temp_out(27) or temp_out(26) or temp_out(25) or temp_out(24) or temp_out(23) or temp_out(22) or temp_out(21) or temp_out(20) or temp_out(19) or temp_out(18) or temp_out(17) or temp_out(16) or temp_out(15) or temp_out(14) or temp_out(13) or temp_out(12) or temp_out(11) or temp_out(10) or temp_out(9) or temp_out(8)or temp_out(7) or temp_out(6) or temp_out(29) or temp_out(28) or temp_out(27) or temp_out(26) or temp_out(25) or temp_out(24)
-or temp_out(5) or temp_out(4) or temp_out(3) or temp_out(2) or temp_out(1) or temp_out(0)); 
+Z	<= not (temp_out(31) or temp_out(30) or temp_out(29) or temp_out(28) or temp_out(27) or temp_out(26) or
+	 temp_out(25) or temp_out(24) or temp_out(23) or temp_out(22) or temp_out(21) or temp_out(20) or 
+	 temp_out(19) or temp_out(18) or temp_out(17) or temp_out(16) or temp_out(15) or temp_out(14) or 
+	 temp_out(13) or temp_out(12) or temp_out(11) or temp_out(10) or temp_out(9) or temp_out(8)or 
+	 temp_out(7) or temp_out(6) or temp_out(5) or temp_out(4) or temp_out(3) or temp_out(2) or temp_out(1) or
+	  temp_out(0)); 
 
 -- S flag 
 S	<= temp_out(31);

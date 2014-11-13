@@ -16,39 +16,7 @@ entity alu1 is
 end alu1;
 
 architecture arch of alu1 is 
-	component add1
-		port(	
-			in1		:	in	std_logic;
-			in0		:	in	std_logic;
-			cin		:	in	std_logic;
-			cout	:	out std_logic;
-			sum		:	out	std_logic
-		);
-	end component;
----	
-	component mux1
-		port(
-			in0		:	in	std_logic;
-			in1		:	in 	std_logic;
-			sel		:	in	std_logic;
-			output	:	out std_logic
-	);		
-	end component;
----
-	component alu_mux
-	port(
-		control		:	in std_logic_vector(3 downto 0);
-		sum_in		:	in	std_logic;
-		sub_in		:	in	std_logic;
-		and_in		:	in	std_logic;
-		or_in			:	in	std_logic;
-		nor_in		:	in	std_logic;
-		slt_in		:	in std_logic;
-		sltu_in		:	in	std_logic;
-		mux_out		:	out	std_logic	
-	);
 	
-	end component;
 
 signal invB		:	std_logic;	-- inverted iB signal
 signal newB		:	std_logic;	-- output of B mux
@@ -75,16 +43,16 @@ begin
 
 -- port map the adder within alu. When subtracting, set carry bit [A-B = A+(~B+1)]
 	ALU_ADD:	
-	add1 port map(ia,newB,cin,cout,alu_sum);	
+	entity work.add1 port map(ia,newB,cin,cout,alu_sum);	
 		
 -- mux to select between iB being normal or complemented	
 	invB <= not iB;
 	ALU_NEG:
-	mux1 port map(iB,invB,add_sub,newB);
+	entity work.mux1 port map(iB,invB,add_sub,newB);
 	
 -- port map the mux to select between different operations
 	ALU_FUNCT:
-	alu_mux port map(control,alu_sum,alu_sum,alu_and,alu_or,alu_nor,alu_slt,alu_sltu,output);
+	entity work.alu_mux port map(control,alu_sum,alu_sum,alu_and,alu_or,alu_nor,alu_slt,alu_sltu,output);
 	
 -- signal for slt mux input
 alu_slt <= less; 
@@ -93,6 +61,4 @@ alu_slt <= less;
 alu_sltu <= less; 
 
 
-	
-	
 end arch;
